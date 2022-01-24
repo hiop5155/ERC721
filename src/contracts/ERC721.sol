@@ -25,7 +25,7 @@ contract ERC721{
     ///  function throws for queries about the zero address.
     /// @param _owner An address for whom to query the balance
     /// @return The number of NFTs owned by `_owner`, possibly zero
-    function balamceOf(address _owner) public view returns(uint){
+    function balanceOf(address _owner) public view returns(uint){
         require(_owner != address(0), 'owner can not be 0');
         return _OwndeTokensCount[_owner];
     }
@@ -51,7 +51,7 @@ contract ERC721{
         address owner = _tokenOwner[tokenId];
         return owner != address(0);
     }
-    function _mint(address to, uint256 tokenId) internal{
+    function _mint(address to, uint256 tokenId) internal virtual{
         require(to != address(0),"mint address can't be 0!");
         require(!_exists(tokenId), "REC721: token already minted");
         _tokenOwner[tokenId] = to;

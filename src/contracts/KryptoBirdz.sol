@@ -2,9 +2,8 @@
 pragma solidity ^0.8.11;
 
 import './ERC721Connector.sol';
-import './ERC721.sol';
 
-contract Kryptobird is ERC721Connector, ERC721 {
+contract Kryptobird is ERC721Connector{
     
     //array to store NFTs
     string[] public kryptoBird;
@@ -20,7 +19,7 @@ contract Kryptobird is ERC721Connector, ERC721 {
         _mint(msg.sender, _id);
         _kryptoBirdzExists[_kryptoBird] = true;
     }
-    constructor() ERC721Connector('KrytoBird', 'KBIRDZ'){
+    constructor() ERC721Connector('KryptoBird', 'KBIRDZ'){
         
     }
 }
