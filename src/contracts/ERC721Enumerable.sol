@@ -5,7 +5,7 @@ import './ERC721.sol';
  contract ERC721Enumerable is ERC721{
     uint[] private _allTokens;
     //mapping from tokenId to position in _allToken
-    mapping(uint256 => uint256) private _tokenIndex;
+    mapping(uint256 => uint256) private _allTokenIndex;
     //mapping of owner to list of all owner token ids
     mapping(address => uint256[]) private _ownedTokens;
     //mapping from token ID to index of the owner tokens list
@@ -24,7 +24,8 @@ import './ERC721.sol';
     /// @return The token identifier for the `_index`th NFT,
     ///  (sort order not specified)
     function tokenByIndex(uint256 _index) external view returns (uint256){
-
+        require(_index < this.totalSupply(), 'Error - glbal index is out of bounds');
+        return _allTokenIndex[_index];
     }
 
     /// @notice Enumerate NFTs assigned to an owner
@@ -35,7 +36,9 @@ import './ERC721.sol';
     /// @return The token identifier for the `_index`th NFT assigned to `_owner`,
     ///   (sort order not specified)
     //override _mint function
-    function tokenOfOwnerByIndex(address _owner, uint256 _index) internal view returns (uint256){
+    function tokenOfOwnerByIndex(address _owner, uint256 _index) external view returns (uint256){
+        require(_index < balanceOf(_owner), 'Error - owner index is out of bounds');
+        return _ownedTokens[_owner][_index];
     }
 
     function _mint(address to, uint256 tokenId) internal override(ERC721){
@@ -44,11 +47,23 @@ import './ERC721.sol';
                 1.add tokens to the owner
                 2.all tokens to our totalsupply - to allTokens 
             */
-            _addTokenToTotalSupply(tokenId);
+            _addTokenToToAllTokenEnumration(tokenId);
+            _addTokensToOwnerEnumeration(to, tokenId);
         }
 
-    function _addTokenToTotalSupply(uint256 tokenId) private{
+    function _addTokenToToAllTokenEnumration(uint256 tokenId) private{
+        _allTokenIndex[tokenId] = _allTokens.length;
         _allTokens.push(tokenId);
     }
 
+    function _addTokensToOwnerEnumeration(address to, uint256 tokenId) private{
+        
+        _ownedTokens[to].push(tokenId);
+        _ownedTokenIndex[tokenId] = _ownedTokens[to].length;
+
+    }
+
+  
+
+    
 }
